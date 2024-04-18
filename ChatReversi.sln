@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Reversi", "Reversi\Reversi.vcxproj", "{02932BE5-6BAE-4B8E-8BD8-A7F889E024A5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReversiConsole", "ReversiConsole\ReversiConsole.vcxproj", "{1C6FA739-B858-4154-97EB-8BE63186C961}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02932BE5-6BAE-4B8E-8BD8-A7F889E024A5}.Debug|x64.ActiveCfg = Debug|x64
+		{02932BE5-6BAE-4B8E-8BD8-A7F889E024A5}.Debug|x64.Build.0 = Debug|x64
+		{02932BE5-6BAE-4B8E-8BD8-A7F889E024A5}.Release|x64.ActiveCfg = Release|x64
+		{02932BE5-6BAE-4B8E-8BD8-A7F889E024A5}.Release|x64.Build.0 = Release|x64
+		{1C6FA739-B858-4154-97EB-8BE63186C961}.Debug|x64.ActiveCfg = Debug|x64
+		{1C6FA739-B858-4154-97EB-8BE63186C961}.Debug|x64.Build.0 = Debug|x64
+		{1C6FA739-B858-4154-97EB-8BE63186C961}.Release|x64.ActiveCfg = Release|x64
+		{1C6FA739-B858-4154-97EB-8BE63186C961}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C81A02F1-5BFC-4D2A-9374-912C5D1B4269}
+	EndGlobalSection
+EndGlobal
