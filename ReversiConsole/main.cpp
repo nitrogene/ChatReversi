@@ -12,15 +12,35 @@ void GetUserInput(int8_t& col, int8_t& row, const CellType currentPlayer) {
     sscanf_s(line.c_str(), "%hhd,%hhd", &col, &row);
 }
 
+void Print(std::shared_ptr<IBoard> pBoard)
+{
+    std::cout << ' ';
+    for (uint8_t col = 0; col < 8; ++col) {
+        std::cout << (size_t)col;
+    }
+    std::cout << std::endl;
+    for (uint8_t row = 0; row < 8; ++row) {
+        std::cout << (size_t)row;
+        for (uint8_t col = 0; col < 8; ++col) {
+            std::cout << std::to_underlying(pBoard->GetCell(col, row));
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "White: " << (int)pBoard->GetScore(CellType::eWhite) << std::endl;
+    std::cout << "Black: " << (int)pBoard->GetScore(CellType::eBlack) << std::endl;
+
+}
+
 int main() {
-    std::unique_ptr<IBoard> pBoard = std::make_unique<Board>();
+    std::shared_ptr<IBoard> pBoard = std::make_shared<Board>();
     CellType currentPlayer = CellType::eBlack;
     RandomDiviner randomDiviner{};
     bool hasPreviousPlayerSkip{ false };
     while (true) {
         int8_t col{ -1 }, row{ -1 };
         currentPlayer = (currentPlayer == CellType::eWhite) ? CellType::eBlack : CellType::eWhite;
-        pBoard->Print();
+        Print(pBoard);
         auto moves = pBoard->GetAvailableMoves(currentPlayer);
         if (moves.empty()) {
             std::cout << "No available moves for player " << (currentPlayer==CellType::eWhite?"White":"Black") << std::endl;

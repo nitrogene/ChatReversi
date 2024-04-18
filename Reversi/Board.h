@@ -32,9 +32,9 @@ private:
 	constexpr void ConvertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const;
 public:
 	virtual bool IsValidMove(const int8_t col, const int8_t row, const CellType currentPlayer) const override;
-	virtual void Print() const override;
 	virtual void MakeMove(const int8_t col, const int8_t row, const CellType currentPlayer) override;
 	virtual uint8_t GetScore(const CellType currentPlayer) const override;
-	virtual std::vector<int8_t> GetAvailableMoves(const CellType currentPlayer) const override;
+	virtual std::vector<std::pair<int8_t, int8_t>> GetAvailableMoves(const CellType currentPlayer) const override;
+	virtual CellType GetCell(const int8_t col, const int8_t row) const override;
 };
 

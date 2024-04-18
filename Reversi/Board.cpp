@@ -64,26 +64,6 @@ void Board::Flip(const int8_t pos, const int8_t dir, const CellType currentPlaye
 	}
 }
 
-void Board::Print() const
-{
-	std::cout << ' ';
-	for (uint8_t col = 0; col < 8; ++col) {
-		std::cout << (size_t)col;
-	}
-	std::cout<<std::endl;
-	for (uint8_t row = 0; row < 8; ++row) {
-		std::cout << (size_t)row;
-		for (uint8_t col = 0; col < 8; ++col) {
-			std::cout << std::to_underlying(m_Cells[CoordinatesToCellIndex(col, row)]);
-		}
-		std::cout << std::endl;
-	}
-
-	std::cout << "White: " << (int)GetScore(CellType::eWhite) << std::endl;
-	std::cout << "Black: " << (int)GetScore(CellType::eBlack) << std::endl;
-
-}
-
 void Board::MakeMove(const int8_t col, const int8_t row, const CellType currentPlayer)
 {
 	if (not IsValidMove(col, row, currentPlayer)) {
@@ -114,19 +94,24 @@ uint8_t Board::GetScore(const CellType currentPlayer) const
 	return score;
 }
 
-std::vector<int8_t> Board::GetAvailableMoves(const CellType currentPlayer) const
+std::vector<std::pair<int8_t, int8_t>> Board::GetAvailableMoves(const CellType currentPlayer) const
 {
-	std::vector<int8_t> moves{};
+	std::vector<std::pair<int8_t, int8_t>> moves{};
 
 	for (int8_t pos = 0; pos < 64; ++pos) {
 		int8_t row = pos / 8;
 		int8_t col = pos % 8;
 		if (IsValidMove(col, row, currentPlayer)) {
-			moves.push_back(pos);
+			moves.push_back({ row, col });
 		}
 	}
 
 	return moves;
+}
+
+CellType Board::GetCell(const int8_t col, const int8_t row) const
+{
+	return m_Cells[CoordinatesToCellIndex(col, row)];
 }
 
 constexpr void Board::ConvertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const {
