@@ -5,5 +5,5 @@
 class IDiviner
 {
 public:
-	virtual void choose(const std::shared_ptr<IBoard>& pBoard) const =0;
+	virtual void choose(std::shared_ptr<IBoard> pBoard) =0;
 };

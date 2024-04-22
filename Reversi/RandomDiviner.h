@@ -9,5 +9,5 @@ private:
 	std::random_device m_randomDevice;
 	std::mt19937 m_generator{ m_randomDevice() };
 public:
-	virtual void choose(const std::shared_ptr<IBoard>& pBoard) const override;
+	virtual void choose(std::shared_ptr<IBoard> pBoard) override;
 };

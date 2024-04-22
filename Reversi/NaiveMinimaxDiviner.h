@@ -5,28 +5,25 @@
 
 // https://en.wikipedia.org/wiki/Minimax
 
-class Node
+namespace Node
 {
-private:
-	bool m_isTerminal{ false };
-	int64_t m_value{ 0 };
-	std::shared_ptr<IBoard> m_pBoard{};
+	bool terminal(std::shared_ptr<IBoard> pBoard);
 
-public:
-	Node(std::shared_ptr<IBoard> pBoard);
+	int64_t value(std::shared_ptr<IBoard> pBoard);
 
-	bool terminal() const;
-
-	int64_t value() const;
-
-	std::vector<Node> children() const;
+	std::vector<std::shared_ptr<IBoard>> children(std::shared_ptr<IBoard> pBoard);
 };
 
 class NaiveMinimaxDiviner : public IDiviner
 {
 private:
-	int64_t minimax(const Node& node, const size_t depth, const bool maximizingPlayer, Node& bestMove) const;
+	Move m_bestMove{};
+	size_t m_depth{};
+
+	int64_t minimax(std::shared_ptr<IBoard> pNode, const size_t depth, const bool maximizingPlayer);
 
 public:
-	virtual void choose(const std::shared_ptr<IBoard>& pBoard) const override;
+	NaiveMinimaxDiviner(size_t depth);
+
+	virtual void choose(std::shared_ptr<IBoard> pBoard) override;
 };

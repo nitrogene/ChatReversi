@@ -1,9 +1,15 @@
 #include "RandomDiviner.h"
 
-void RandomDiviner::choose(const std::shared_ptr<IBoard>& pBoard) const
+void RandomDiviner::choose(std::shared_ptr<IBoard> pBoard)
 {
+	if (pBoard->mustSkip()) {
+		pBoard->skip();
+	}
+
 	auto moves = pBoard->availableMoves();
-	std::uniform_int_distribution<unsigned short> m_range{ 0, (uint8_t)(moves.size()-1)};
-	auto move = moves[static_cast<size_t>(m_range(m_generator))];
-	pBoard->makeMove(move.first, move.second);
+	//std::uniform_int_distribution<int> m_range{ (int)0, (int)(moves.size()-1)};
+	//auto i = m_range(m_generator);
+	//auto move = moves[i];
+	auto move = moves[0];
+	pBoard->makeMove(move.col, move.row);
 }

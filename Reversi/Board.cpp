@@ -20,7 +20,7 @@ bool Board::isValidMove(const int8_t col, const int8_t row) const
 	{
 		int8_t pos = coordinatesToCellIndex(col, row);
 		// Cell must be empty
-		if (m_Cells[pos] != CellType::eEmpty) {
+		if (m_cells[pos] != CellType::eEmpty) {
 			return false;
 		}
 		// Can we at least flip a cell in at least one direction?
@@ -45,21 +45,21 @@ bool Board::canFlipInDir(const int8_t pos, const int8_t dir) const
 	int8_t nextCol = (curPos % 8) + dcol;
 	CellType opponentPlayer = (m_currentPlayer == CellType::eWhite) ? CellType::eBlack : CellType::eWhite;
 
-	while (nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_Cells[curPos+dir]== opponentPlayer) {
+	while (nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_cells[curPos+dir]== opponentPlayer) {
 		curPos += dir;
 		nextRow = (curPos / 8) + drow;
 		nextCol = (curPos % 8) + dcol;
 	}
 
-	return curPos != pos && nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_Cells[curPos + dir] == m_currentPlayer;
+	return curPos != pos && nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_cells[curPos + dir] == m_currentPlayer;
 }
 void Board::flip(const int8_t pos, const int8_t dir)
 {
 	// ChatGPT powered
 	int nextPos = pos + dir;
 
-	while (m_Cells[nextPos] != CellType::eEmpty && m_Cells[nextPos] != m_currentPlayer) {
-		m_Cells[nextPos] = m_currentPlayer;
+	while (m_cells[nextPos] != CellType::eEmpty && m_cells[nextPos] != m_currentPlayer) {
+		m_cells[nextPos] = m_currentPlayer;
 		nextPos += dir;
 	}
 }
@@ -78,7 +78,7 @@ void Board::makeMove(const int8_t col, const int8_t row)
 		}
 		flip(pos, dir);
 	}
-	m_Cells[pos] = m_currentPlayer;
+	m_cells[pos] = m_currentPlayer;
 
 	m_moves.emplace_back(m_currentPlayer, row, col);
 
@@ -89,7 +89,7 @@ uint8_t Board::score(const CellType player) const
 {
 	uint8_t score{ 0 };
 
-	for (auto c : m_Cells) {
+	for (auto c : m_cells) {
 		if (c == player) {
 			score++;
 		}
@@ -98,15 +98,15 @@ uint8_t Board::score(const CellType player) const
 	return score;
 }
 
-std::vector<std::pair<int8_t, int8_t>> Board::availableMoves() const
+std::vector<Move> Board::availableMoves() const
 {
-	std::vector<std::pair<int8_t, int8_t>> moves{};
+	std::vector<Move> moves{};
 
 	for (int8_t pos = 0; pos < 64; ++pos) {
 		int8_t row = pos / 8;
 		int8_t col = pos % 8;
 		if (isValidMove(col, row)) {
-			moves.push_back({ row, col });
+			moves.push_back({ m_currentPlayer, row, col });
 		}
 	}
 
@@ -115,23 +115,25 @@ std::vector<std::pair<int8_t, int8_t>> Board::availableMoves() const
 
 CellType Board::cell(const int8_t col, const int8_t row) const
 {
-	return m_Cells[coordinatesToCellIndex(col, row)];
+	return m_cells[coordinatesToCellIndex(col, row)];
 }
 
 Cells Board::cells() const
 {
-	return m_Cells;
+	return m_cells;
 }
 
 void Board::cells(const Cells& cells)
 {
-	m_Cells = cells;
+	m_cells = cells;
 }
 
 std::shared_ptr<IBoard> Board::duplicate() const
 {
 	auto pBoard = std::make_shared<Board>();
-	pBoard->cells(m_Cells);
+	pBoard->cells(m_cells);
+	pBoard->moves(m_moves);
+	pBoard->currentPlayer(m_currentPlayer);
 	return pBoard;
 }
 
@@ -175,22 +177,21 @@ CellType Board::currentPlayer() const
 	return m_currentPlayer;
 }
 
-bool Board::gameOver()
+bool Board::gameOver() const
 {	
 	if (mustSkip())
 	{
-		togglePlayer();
-		if (mustSkip()) {
-			togglePlayer();
+		auto tmp = std::dynamic_pointer_cast<Board>(duplicate());
+		tmp->togglePlayer();
+		if (tmp->mustSkip()) {
 			return true;
 		}
-		togglePlayer();
 	}
 	
 	return false;
 }
 
-bool Board::mustSkip()
+bool Board::mustSkip() const
 {
 	for (int8_t pos = 0; pos < 64; ++pos) {
 		int8_t row = pos / 8;
@@ -208,7 +209,7 @@ void Board::skip()
 	togglePlayer();
 }
 
-Move Board::lastMove()
+Move Board::lastMove() const
 {
 	return m_moves.back();
 }
@@ -216,4 +217,14 @@ Move Board::lastMove()
 void Board::togglePlayer()
 {
 	m_currentPlayer = (m_currentPlayer == CellType::eWhite) ? CellType::eBlack : CellType::eWhite;
+}
+
+void Board::moves(const std::vector<Move>& moves)
+{
+	m_moves = moves;
+}
+
+void Board::currentPlayer(CellType currentPlayer)
+{
+	m_currentPlayer = currentPlayer;
 }

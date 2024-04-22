@@ -34,7 +34,7 @@ void Print(std::shared_ptr<IBoard> pBoard)
 
 int main() {
     std::shared_ptr<IBoard> pBoard = std::make_shared<Board>();
-    NaiveMinimaxDiviner diviner{};
+    NaiveMinimaxDiviner diviner{4};
     while (not pBoard->gameOver()) {
         int8_t col{ -1 }, row{ -1 };
         Print(pBoard);
@@ -55,8 +55,9 @@ int main() {
             pBoard->makeMove(col, row);
         }
         else {
-            diviner.choose(pBoard, col, row);
-            std::cout << "Player Black move col, row:" << (short)col << "," << (short)row << std::endl;
+            diviner.choose(pBoard);
+            auto move = pBoard->lastMove();
+            std::cout << "Player Black move col, row:" << (short)move.col << "," << (short)move.row << std::endl;
         }
         
     }

@@ -10,7 +10,7 @@ private:
 #define WHITE CellType::eWhite
 
 	static const int8_t g_dirs[];
-	Cells m_Cells{
+	Cells m_cells{
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
@@ -33,19 +33,22 @@ private:
 	constexpr void convertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const;
 	virtual void togglePlayer() override;
 
+	void moves(const std::vector<Move>& moves);
+	void currentPlayer(CellType currentPlayer);
+
 public:
 	virtual bool isValidMove(const int8_t col, const int8_t row) const override;
 	virtual void makeMove(const int8_t col, const int8_t row) override;
 	virtual uint8_t score(const CellType player) const override;
-	virtual std::vector<std::pair<int8_t, int8_t>> availableMoves() const override;
+	virtual std::vector<Move> availableMoves() const override;
 	virtual CellType cell(const int8_t col, const int8_t row) const override;
 	virtual Cells cells() const override;
 	virtual void cells(const Cells& cells) override;
 	virtual std::shared_ptr<IBoard> duplicate() const override;
 	virtual CellType currentPlayer() const override;
-	virtual bool gameOver() override;
-	virtual bool mustSkip() override;
+	virtual bool gameOver() const override;
+	virtual bool mustSkip() const override;
 	virtual void skip() override;
-	virtual Move lastMove() override;
+	virtual Move lastMove() const override;
 };
 
