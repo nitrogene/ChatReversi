@@ -10,8 +10,7 @@ private:
 #define WHITE CellType::eWhite
 
 	static const int8_t g_dirs[];
-
-	std::array<CellType, 64> m_Cells{
+	Cells m_Cells{
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
@@ -21,20 +20,32 @@ private:
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
 		EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY
 	};
+	CellType m_currentPlayer{ WHITE };
+	std::vector<Move> m_moves{};
 
 #undef EMPTY
 #undef BLACK
 #undef WHITE
 
-	uint8_t CoordinatesToCellIndex(const int8_t col, const int8_t row) const;
-	bool CanFlipInDir(const int8_t pos, const int8_t dir, const CellType currentPlayer) const;
-	void Flip(const int8_t pos, const int8_t dir, const CellType currentPlayer);
-	constexpr void ConvertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const;
+	uint8_t coordinatesToCellIndex(const int8_t col, const int8_t row) const;
+	bool canFlipInDir(const int8_t pos, const int8_t dir) const;
+	void flip(const int8_t pos, const int8_t dir);
+	constexpr void convertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const;
+	virtual void togglePlayer() override;
+
 public:
-	virtual bool IsValidMove(const int8_t col, const int8_t row, const CellType currentPlayer) const override;
-	virtual void MakeMove(const int8_t col, const int8_t row, const CellType currentPlayer) override;
-	virtual uint8_t GetScore(const CellType currentPlayer) const override;
-	virtual std::vector<std::pair<int8_t, int8_t>> GetAvailableMoves(const CellType currentPlayer) const override;
-	virtual CellType GetCell(const int8_t col, const int8_t row) const override;
+	virtual bool isValidMove(const int8_t col, const int8_t row) const override;
+	virtual void makeMove(const int8_t col, const int8_t row) override;
+	virtual uint8_t score(const CellType player) const override;
+	virtual std::vector<std::pair<int8_t, int8_t>> availableMoves() const override;
+	virtual CellType cell(const int8_t col, const int8_t row) const override;
+	virtual Cells cells() const override;
+	virtual void cells(const Cells& cells) override;
+	virtual std::shared_ptr<IBoard> duplicate() const override;
+	virtual CellType currentPlayer() const override;
+	virtual bool gameOver() override;
+	virtual bool mustSkip() override;
+	virtual void skip() override;
+	virtual Move lastMove() override;
 };
 

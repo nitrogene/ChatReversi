@@ -5,5 +5,5 @@
 class IDiviner
 {
 public:
-	virtual void Choose(const std::shared_ptr<IBoard>& pBoard, const CellType currentPlayer, int8_t& col, int8_t& row) =0;
+	virtual void choose(const std::shared_ptr<IBoard>& pBoard) const =0;
 };
