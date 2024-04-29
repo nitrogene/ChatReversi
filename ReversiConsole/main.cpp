@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "RandomDiviner.h"
 #include "NaiveMinimaxDiviner.h"
+#include "FailSoftAlphaBetaMinimaxDiviner.h"
 #include "HumanDiviner.h"
 
 void Print(std::shared_ptr<IBoard> pBoard)
@@ -27,8 +28,8 @@ void Print(std::shared_ptr<IBoard> pBoard)
 
 int main() {
     std::shared_ptr<IBoard> pBoard = std::make_shared<Board>();
-    NaiveMinimaxDiviner whitePlayer{5};
-    NaiveMinimaxDiviner blackPlayer{1};
+    RandomDiviner whitePlayer{};
+    FailSoftAlphaBetaMinimaxDiviner blackPlayer{64};
     while (not pBoard->gameOver()) {
         auto currentPlayer = pBoard->currentPlayer();
         Print(pBoard);

@@ -75,16 +75,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="FailSoftAlphaBetaMinimaxDiviner.h" />
     <ClInclude Include="HumanDiviner.h" />
     <ClInclude Include="IBoard.h" />
     <ClInclude Include="IDiviner.h" />
     <ClInclude Include="NaiveMinimaxDiviner.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="RandomDiviner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="FailSoftAlphaBetaMinimaxDiviner.cpp" />
     <ClCompile Include="HumanDiviner.cpp" />
     <ClCompile Include="NaiveMinimaxDiviner.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="RandomDiviner.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
