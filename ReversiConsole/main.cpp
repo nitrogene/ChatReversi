@@ -1,17 +1,10 @@
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <memory>
 #include "Board.h"
 #include "RandomDiviner.h"
 #include "NaiveMinimaxDiviner.h"
-
-void GetUserInput(int8_t& col, int8_t& row) {
-    std::cout << "Player White move col, row:";
-    std::string line;
-    std::getline(std::cin, line);
-    sscanf_s(line.c_str(), "%hhd,%hhd", &col, &row);
-}
+#include "HumanDiviner.h"
 
 void Print(std::shared_ptr<IBoard> pBoard)
 {
@@ -34,34 +27,39 @@ void Print(std::shared_ptr<IBoard> pBoard)
 
 int main() {
     std::shared_ptr<IBoard> pBoard = std::make_shared<Board>();
-    NaiveMinimaxDiviner diviner{4};
+    NaiveMinimaxDiviner whitePlayer{5};
+    NaiveMinimaxDiviner blackPlayer{1};
     while (not pBoard->gameOver()) {
-        int8_t col{ -1 }, row{ -1 };
+        auto currentPlayer = pBoard->currentPlayer();
         Print(pBoard);
 
-        // Current player must skip?
         if (pBoard->mustSkip()) {
-            std::cout << "skipping" << std::endl;
+            std::cout << (currentPlayer==CellType::eWhite?"White":"Black") << " player has skipped" << std::endl;
             pBoard->skip();
             continue;
         }
-
+        
         if (pBoard->currentPlayer() == CellType::eWhite) {
-            GetUserInput(col, row);
-            while (not pBoard->isValidMove(col, row)) {
-                std::cout << "col=" << (short)col << " row=" << (short)row << " invalid move!" << std::endl;
-                GetUserInput(col, row);
-            }
-            pBoard->makeMove(col, row);
+            whitePlayer.choose(pBoard);
         }
         else {
-            diviner.choose(pBoard);
-            auto move = pBoard->lastMove();
-            std::cout << "Player Black move col, row:" << (short)move.col << "," << (short)move.row << std::endl;
+            blackPlayer.choose(pBoard);
         }
-        
     }
+
+    // Game over board
     Print(pBoard);
+
+    if (pBoard->score(CellType::eWhite) > pBoard->score(CellType::eBlack)) {
+        std::cout << "White player has won" << std::endl;
+    }
+    else if (pBoard->score(CellType::eWhite) < pBoard->score(CellType::eBlack)) {
+        std::cout << "Black player has won" << std::endl;
+    }
+    else
+    {
+        std::cout << "draw" << std::endl;
+    }
     
     return 0;
 }

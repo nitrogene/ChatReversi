@@ -30,6 +30,9 @@
     <ClInclude Include="RandomDiviner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HumanDiviner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp">
@@ -39,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RandomDiviner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HumanDiviner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

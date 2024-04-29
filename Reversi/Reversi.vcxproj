@@ -75,6 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="HumanDiviner.h" />
     <ClInclude Include="IBoard.h" />
     <ClInclude Include="IDiviner.h" />
     <ClInclude Include="NaiveMinimaxDiviner.h" />
@@ -82,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="HumanDiviner.cpp" />
     <ClCompile Include="NaiveMinimaxDiviner.cpp" />
     <ClCompile Include="RandomDiviner.cpp" />
   </ItemGroup>
