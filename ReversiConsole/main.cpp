@@ -17,13 +17,20 @@ void Print(std::shared_ptr<IBoard> pBoard)
     for (uint8_t row = 0; row < 8; ++row) {
         std::cout << (size_t)row;
         for (uint8_t col = 0; col < 8; ++col) {
-            std::cout << std::to_underlying(pBoard->cell(col, row));
+            auto player = pBoard->cell(col, row);
+            char cell{ ' ' };
+            if (player.has_value()) {
+                cell = std::to_underlying(pBoard->cell(col, row).value());
+            }
+            std::cout << cell;
         }
         std::cout << std::endl;
     }
 
-    std::cout << "White: " << (int)pBoard->score(CellType::eWhite) << std::endl;
-    std::cout << "Black: " << (int)pBoard->score(CellType::eBlack) << std::endl;
+    uint8_t whiteScore, blackScore;
+    pBoard->score(whiteScore, blackScore);
+    std::cout << "White: " << (int)whiteScore << std::endl;
+    std::cout << "Black: " << (int)blackScore << std::endl;
 }
 
 int main() {
@@ -35,12 +42,12 @@ int main() {
         Print(pBoard);
 
         if (pBoard->mustSkip()) {
-            std::cout << (currentPlayer==CellType::eWhite?"White":"Black") << " player has skipped" << std::endl;
+            std::cout << (currentPlayer==Player::eWhite?"White":"Black") << " player has skipped" << std::endl;
             pBoard->skip();
             continue;
         }
         
-        if (pBoard->currentPlayer() == CellType::eWhite) {
+        if (pBoard->currentPlayer() == Player::eWhite) {
             whitePlayer.choose(pBoard);
         }
         else {
@@ -51,10 +58,12 @@ int main() {
     // Game over board
     Print(pBoard);
 
-    if (pBoard->score(CellType::eWhite) > pBoard->score(CellType::eBlack)) {
+    uint8_t whiteScore, blackScore;
+    pBoard->score(whiteScore, blackScore);
+    if (whiteScore > blackScore) {
         std::cout << "White player has won" << std::endl;
     }
-    else if (pBoard->score(CellType::eWhite) < pBoard->score(CellType::eBlack)) {
+    else if (whiteScore < blackScore) {
         std::cout << "Black player has won" << std::endl;
     }
     else

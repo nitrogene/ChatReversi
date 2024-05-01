@@ -9,7 +9,10 @@ namespace Node
 
 	int64_t value(std::shared_ptr<IBoard> pBoard)
 	{
-		return pBoard->score(pBoard->currentPlayer());
+		uint8_t whiteScore, blackScore;
+		pBoard->score(whiteScore, blackScore);
+
+		return pBoard->currentPlayer() == Player::eWhite ? whiteScore : blackScore;
 	}
 
 	std::vector<std::shared_ptr<IBoard>> children(std::shared_ptr<IBoard> pBoard)
