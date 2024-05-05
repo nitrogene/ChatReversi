@@ -1,22 +1,21 @@
 #pragma once
 #include "IBoard.h"
 
-class Board: public IBoard
+class Board : public IBoard
 {
 private:
-	static const int8_t g_dirs[];
+	static const int8_t s_dirs[];
 	uint64_t m_whiteCells{ 0b0000000000000000000000000001000000001000000000000000000000000000 };
 	uint64_t m_blackCells{ 0b0000000000000000000000000000100000010000000000000000000000000000 };
 	std::vector<Move> m_moves{};
 	Player m_currentPlayer{Player::eWhite};
 
 	virtual void togglePlayer() override;
-	uint64_t coordinatesToBitPos(const uint8_t col, const uint8_t row) const;
-	bool canFlipInDir(const uint64_t bitPos, const int8_t dir) const;
+	bool canFlipInDir(const uint8_t pos, const int8_t dir) const;
 
 
 	//void flip(const int8_t pos, const int8_t dir);
-	//constexpr void convertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const;
+	constexpr void convertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const;
 	
 
 	//void moves(const std::vector<Move>& moves);

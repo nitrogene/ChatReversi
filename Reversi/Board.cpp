@@ -3,48 +3,48 @@
 #include <bit>
 #include "Board.h"
 
-const int8_t Board::g_dirs[] = { -7, -8, -9, -1, 1, 7, 8, 9 };
+//   -9  -8  -7
+//   -1   x   1
+//    7   8   9
+
+const int8_t Board::s_dirs[]={ -7, -8, -9, -1, 1, 7, 8, 9 };
 
 void Board::togglePlayer()
 {
 	m_currentPlayer = (m_currentPlayer == Player::eWhite) ? Player::eBlack : Player::eWhite;
 }
 
-uint64_t Board::coordinatesToBitPos(const uint8_t col, const uint8_t row) const
-{
-	return ((uint64_t)1) << (((uint64_t)col) + (((uint64_t)row) << 3));
-}
-
-bool Board::canFlipInDir(const uint64_t bitPos, const int8_t dir) const
-{
-	// TODO:
-	// checking overflow with
-	// #include <stdckdint.h>
-	// bool ckd_add(type1 * result, type2 a, type3 b);
-	// bool ckd_sub(type1 * result, type2 a, type3 b);
-	// bool ckd_mul(type1 * result, type2 a, type3 b);
-
-
-
-	int8_t drow, dcol;
-	convertDir(dir, drow, dcol);
+bool Board::canFlipInDir(const uint8_t pos, const int8_t dir) const
+{ 
 	int8_t curPos = pos;
-	int8_t nextRow = (curPos / 8) + drow;
-	int8_t nextCol = (curPos % 8) + dcol;
-	CellType opponentPlayer = (m_currentPlayer == CellType::eWhite) ? CellType::eBlack : CellType::eWhite;
+	// TODO:
+	// Only work with Pos
+	// Detecting top and bottom crossing is easy: check for nextPos>=0 & nextPos<64
+	// Idea:
+	// - Are we on right side and dir=-7 or 1 or 9 ? BAD
+	// - Are we on left side and dir=-9 or -1 or 7 ? BAD
 
-	while (nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_cells[curPos+dir]== opponentPlayer) {
+	Coordinates coord{ Move::toCoordinates(pos) };
+	int8_t nextRow = (curPos / 8) + coord.row;
+	int8_t nextCol = (curPos % 8) + coord.col;
+	uint64_t opponentCells{m_blackCells};
+	if (m_currentPlayer == Player::eBlack) {
+		opponentCells = m_whiteCells;
+	}
+
+	while (nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && (opponentCells&(1<<(curPos+dir)))) {
 		curPos += dir;
 		nextRow = (curPos / 8) + drow;
 		nextCol = (curPos % 8) + dcol;
 	}
 
-	return curPos != pos && nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_cells[curPos + dir] == m_currentPlayer;
+	//return curPos != pos && nextRow >= 0 && nextRow < 8 && nextCol >= 0 && nextCol < 8 && m_cells[curPos + dir] == m_currentPlayer;
 }
 
 bool Board::isValidMove(const uint8_t col, const uint8_t row) const
 {
-	uint64_t bitPos{ coordinatesToBitPos(col, row) };
+	uint8_t pos{ coordinatesToPos(col, row) };
+	uint64_t bitPos{ ((uint64_t)1) << pos };
 
 	// Cell must be empty
 	if (m_whiteCells & bitPos || m_blackCells & bitPos) {
@@ -52,8 +52,8 @@ bool Board::isValidMove(const uint8_t col, const uint8_t row) const
 	}
 
 	// Can we at least flip a cell in at least one direction?
-	for (const auto dir : g_dirs) {
-		if (canFlipInDir(bitPos, dir)) {
+	for (const auto dir : toto[pos]) {
+		if (canFlipInDir(pos, dir)) {
 			return true;
 		}
 	}
@@ -116,7 +116,8 @@ std::vector<Move> Board::availableMoves() const
 
 std::optional<Player> Board::cell(const uint8_t col, const uint8_t row) const
 {
-	uint64_t pos{ coordinatesToBitPos(col, row) };
+	uint8_t pos{ coordinatesToPos(col, row) };
+	uint64_t bitPos{ ((uint64_t)1) << pos };
 
 	if (m_whiteCells & pos) {
 		return Player::eWhite;
@@ -211,40 +212,40 @@ Move Board::lastMove() const
 //
 //
 //
-//constexpr void Board::convertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const {
-//	if (dir == -9) {
-//		drow = -1;
-//		dcol = -1;
-//	}
-//	else if (dir == -8) {
-//		drow = -1;
-//		dcol = 0;
-//	}
-//	else if (dir == -7) {
-//		drow = -1;
-//		dcol = 1;
-//	}
-//	else if (dir == -1) {
-//		drow = 0;
-//		dcol = -1;
-//	}
-//	else if (dir == 1) {
-//		drow = 0;
-//		dcol = 1;
-//	}
-//	else if (dir == 7) {
-//		drow = 1;
-//		dcol = -1;
-//	}
-//	else if (dir == 8) {
-//		drow = 1;
-//		dcol = 0;
-//	}
-//	else if (dir == 9) {
-//		drow = 1;
-//		dcol = 1;
-//	}
-//}
+constexpr void Board::convertDir(const int8_t dir, int8_t& drow, int8_t& dcol) const {
+	if (dir == -9) {
+		drow = -1;
+		dcol = -1;
+	}
+	else if (dir == -8) {
+		drow = -1;
+		dcol = 0;
+	}
+	else if (dir == -7) {
+		drow = -1;
+		dcol = 1;
+	}
+	else if (dir == -1) {
+		drow = 0;
+		dcol = -1;
+	}
+	else if (dir == 1) {
+		drow = 0;
+		dcol = 1;
+	}
+	else if (dir == 7) {
+		drow = 1;
+		dcol = -1;
+	}
+	else if (dir == 8) {
+		drow = 1;
+		dcol = 0;
+	}
+	else if (dir == 9) {
+		drow = 1;
+		dcol = 1;
+	}
+}
 
 //
 //

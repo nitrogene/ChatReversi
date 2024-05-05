@@ -7,6 +7,8 @@
 #include "FailSoftAlphaBetaMinimaxDiviner.h"
 #include "HumanDiviner.h"
 
+#include <fstream>
+
 void Print(std::shared_ptr<IBoard> pBoard)
 {
     std::cout << ' ';
@@ -34,6 +36,38 @@ void Print(std::shared_ptr<IBoard> pBoard)
 }
 
 int main() {
+    std::pair<int8_t, int8_t> dirs[] = {
+        {1,0},
+        {1,1},
+        {0,1},
+        {-1,1},
+        {-1,0},
+        {-1,-1},
+        {0,-1},
+        {1,-1}
+    };
+
+    std::fstream my_file;
+    my_file.open("my_file", std::ios::out);
+  
+    for (int8_t pos = 0; pos < 64; ++pos) {
+        my_file << "{";
+        for (size_t i = 0; i < 8; ++i) {
+            int8_t col = (pos % 8) + dirs[i].first;
+            int8_t row = (pos / 8) + dirs[i].second;
+
+            if (col >= 0 && col <= 7 && row >= 0 && row <= 7) {
+                int8_t newPos = col + row * 8;
+                my_file << (int)(newPos - pos) << ",";
+            }
+        }
+        my_file << "}," <<std::endl;
+    }
+
+    my_file.close();
+
+    return 0;
+    uint64_t a{ 0 };
     std::shared_ptr<IBoard> pBoard = std::make_shared<Board>();
     RandomDiviner whitePlayer{};
     FailSoftAlphaBetaMinimaxDiviner blackPlayer{64};
